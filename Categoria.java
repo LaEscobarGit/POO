@@ -1,18 +1,23 @@
 package com.mycompany.mavenproject1;
+import java.io.Serializable;
 
-public enum Categoria {
-    ANTIBIOTICO("Antibiótico"),
-    ANTISEPTICO("Antiséptico"),
-    ANALGESICO("Analgésico");
+public class Categoria implements Serializable{
+    private String nombre;
 
-    private final String nombre;
+    public Categoria(String nombre){
+        this.nombre = nombre;
+    }
 
-    private Categoria(String nombre) {
+    public String getNombre(){
+        return nombre;
+    }
+
+    public void setNombre(String nombre){
         this.nombre = nombre;
     }
 
     @Override
-	public String toString() {
-		return nombre;
-	}
+    public String toString(){
+        return nombre;
+    }
 }

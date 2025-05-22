@@ -30,7 +30,7 @@ public class Inventario implements Serializable {
         getInventario();
     }
     
-    public ArrayList<Producto> getLista(){
+    public ArrayList<Producto> getLista(){ //obtener lista de productos
         return lista;
     }
     public void agregarProducto(Producto a){
@@ -71,6 +71,7 @@ public class Inventario implements Serializable {
                         writer.write(ruta.getAbsolutePath());
                     } catch (IOException e) {
                         System.out.println("Error al guardar la ruta en config.txt");
+                        JOptionPane.showMessageDialog(null,"La lista actual de productos ha sido guardada","Mensaje", JOptionPane.INFORMATION_MESSAGE,null);
                     }
                     guardado = true;
                 } else {

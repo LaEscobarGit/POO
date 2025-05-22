@@ -1,4 +1,6 @@
 package com.mycompany.mavenproject1;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -9,16 +11,16 @@ public class VentanaAgregarProducto extends JFrame implements ActionListener {
     private Container contenedor; /* Un contenedor de elementos gráficos */
     private Inventario lista;
     private AdminPanel adminPanel;
-	
+    private ManejoCategorias manejoCategorias;
+    
     // Etiquetas estáticas para indicar los datos a ingresar
     private JLabel nombre, categoria, tipo, precio, cantidad, descripcion, id, stock, medida, preescripcion;
 	
     // Campos de texto a ingresar de un Producto
     private JTextField campoNombre, campoPrecio, campoMedida, campoDescripcion, campoId;
-
     private JCheckBox checkPreescripcion; // Botones de radios
-    private JComboBox<String> campoCategoria;
-    private JComboBox<String> campoTipo;
+    private JComboBox<Categoria> campoCategoria;
+    private JComboBox<Tipo> campoTipo;
     private JSpinner campoStock;
     private JSpinner campoCantidad; // Un selector de datos numerico
     private SpinnerNumberModel modeloSpinner; /* Modelo numerico para el selector numerico */
@@ -28,9 +30,10 @@ public class VentanaAgregarProducto extends JFrame implements ActionListener {
     Productos */
     private JButton agregar, limpiar;
 	
-    public VentanaAgregarProducto(Inventario inventario, AdminPanel adminPanel){
+    public VentanaAgregarProducto(Inventario inventario, AdminPanel adminPanel, ManejoCategorias manejoCategorias){
         this.lista = inventario;
         this.adminPanel = adminPanel;
+        this.manejoCategorias = manejoCategorias;
     	inicio();
     	setTitle("Agregar Producto"); // Establece el titulo de la ventana
     	setSize(360,400); // Establece el tamaño de la ventana
@@ -42,6 +45,7 @@ public class VentanaAgregarProducto extends JFrame implements ActionListener {
         this.lista = inventario;
         this.adminPanel = adminPanel;
         inicio();
+        contenedor.setBackground(Color.white);
         
         campoId.setText(String.valueOf(productoEditar.getId()));
         campoId.setEnabled(false); // ID no modificable
@@ -75,9 +79,12 @@ public class VentanaAgregarProducto extends JFrame implements ActionListener {
     * Metodo que crea la ventana con sus diferentes componentes gráficos
     */
     public void inicio(){
-    	contenedor = getContentPane(); /* Obtiene el panel de contenidos de la ventana */
+    	List<Categoria> categorias = manejoCategorias.getCategorias();
+        actualizarCombo();
+        contenedor = getContentPane(); /* Obtiene el panel de contenidos de la ventana */
     	contenedor.setLayout(null); /* Establece que el contenedor no tiene un layout */
-        		// Establece la etiqueta y el campo de texto id del Producto
+        
+        // Establece la etiqueta y el campo de texto id del Producto
         id = new JLabel();
         id.setText("ID:");
 	id.setBounds(20, 20, 135, 23);
@@ -94,27 +101,23 @@ public class VentanaAgregarProducto extends JFrame implements ActionListener {
 	categoria = new JLabel();
 	categoria.setText("Categoria:");
 	categoria.setBounds(20, 80, 135, 23); 
-	campoCategoria = new JComboBox<String>();
-	campoCategoria.addItem("Antibiotico");
-	campoCategoria.addItem("Antiseptico");
-	campoCategoria.addItem("Analgesico");
+        campoCategoria = new JComboBox<>(categorias.toArray(new Categoria[0]));
 	campoCategoria.setBounds(160, 80, 160, 23);
 	
 	// Establece la etiqueta y el combo box del tipo del Producto
 	tipo = new JLabel();
 	tipo.setText("Tipo:");
         tipo.setBounds(20,110,100,23); 
-	campoTipo = new JComboBox<String>();
-	campoTipo.addItem("Capsula");
-	campoTipo.addItem("Liquido");
-	campoTipo.addItem("Tableta");
+	campoTipo = new JComboBox<>(Tipo.values());
 	campoTipo.setBounds(160,110,160,23);
+        
         // Establece la etiqueta y la medida del Producto
 	medida = new JLabel();
 	medida.setText("Medida:");
 	medida.setBounds(20, 140, 135, 23);
 	campoMedida = new JTextField();
 	campoMedida.setBounds(160, 140, 160, 23);
+        
 	// Establece la etiqueta y el descripcion del Producto
 	descripcion = new JLabel();
 	descripcion.setText("Descripcion:");
@@ -224,50 +227,43 @@ public class VentanaAgregarProducto extends JFrame implements ActionListener {
             limpiarCampos();
 	}
     }
-	
+    
+    private void actualizarCombo(){
+        campoCategoria.removeAllItems();
+        for(Categoria cat:manejoCategorias.getCategorias()){
+            campoCategoria.addItem(cat);
+        }
+    }
     /**
     * Metodo que agrega un Producto a la lista de Productos
     * throws Exception Excepcion de campo nulo o error en formato de
     * numero
     */
     private void añadirProducto() {
-	Tipo tipoT;
+	Tipo valor3;
 		
 	// Obtiene el cargo seleccionado del combobox
 	String itemSeleccionado = (String) campoTipo.getSelectedItem();
 		
 	/* De acuerdo al tipo seleccionado, se asigna el valor de atributo correspondiente */
 	switch (itemSeleccionado) {
-            case "Capsula": tipoT = Tipo.CAPSULA;
+            case "Capsula": valor3 = Tipo.CAPSULA;
             break;
-            case "Liquido": tipoT = Tipo.LIQUIDO;
+            case "Liquido": valor3 = Tipo.LIQUIDO;
             break;
-            default: tipoT = Tipo.TABLETA;
-        }
-		
-	Categoria tipoG;
-	
-	// Obtiene lo seleccionado del combobox
-	String itemSeleccionado2 = (String) campoCategoria.getSelectedItem();
-		
-	/* De acuerdo al cargo seleccionado, se asigna el valor de atributo correspondiente */
-        switch (itemSeleccionado2) {
-            case "Antibiotico": tipoG = Categoria.ANTIBIOTICO;
-            break;
-            case "Antiseptico": tipoG = Categoria.ANTISEPTICO;
-            break;
-            default: tipoG = Categoria.ANALGESICO;
+            default: valor3 = Tipo.TABLETA;
         }
 		
 	try {
             String valor1 = campoNombre.getText();
-            String valor2 = campoMedida.getText();
-            String valor3 = campoDescripcion.getText();
-            double valor4 = Double.parseDouble(campoPrecio.getText());
-            int valor5 = Integer.parseInt(campoId.getText());
-            int valor6 = (int) campoStock.getValue();
-            boolean valor7 = true; //CAMBIAR ESTA PARTE
-            Producto nuevo = new Producto(valor1, tipoG, tipoT, valor2, valor3, valor4, valor5, valor6, valor7); // Se crea un Producto
+            Categoria valor2 = (Categoria) campoCategoria.getSelectedItem();
+            String valor4 = campoMedida.getText();
+            String valor5 = campoDescripcion.getText();
+            double valor6 = Double.parseDouble(campoPrecio.getText());
+            int valor7 = Integer.parseInt(campoId.getText());
+            int valor8 = (int) campoStock.getValue();
+            boolean valor9 = true; //CAMBIAR ESTA PARTE
+            Producto nuevo = new Producto(valor1, valor2, valor3, valor4, valor5, valor6, valor7, valor8, valor9); // Se crea un Producto
             lista.agregarProducto(nuevo); /* Se agrega un Producto a la lista de Productos */
 	
             // Mensaje de confirmacion de Producto agregado a la lista
