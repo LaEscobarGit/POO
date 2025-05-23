@@ -41,11 +41,19 @@ public class VentanaAgregarProducto extends JFrame implements ActionListener {
     	setResizable(false); /* Establece que la ventana no puede cambiar de tamaño */
     }
 
-    public VentanaAgregarProducto(Inventario inventario, AdminPanel adminPanel, Producto productoEditar){ //constructor de ventana modificar
+    public VentanaAgregarProducto(Inventario inventario, AdminPanel adminPanel, Producto productoEditar, ManejoCategorias manejoCategorias){ //constructor de ventana modificar
         this.lista = inventario;
         this.adminPanel = adminPanel;
+        this.manejoCategorias = manejoCategorias;
         inicio();
         contenedor.setBackground(Color.white);
+        setSize(360,400);
+        setLocationRelativeTo(null);
+        setResizable(false);
+        
+        for (ActionListener al : agregar.getActionListeners()) {
+            agregar.removeActionListener(al);
+        }
         
         campoId.setText(String.valueOf(productoEditar.getId()));
         campoId.setEnabled(false); // ID no modificable
@@ -73,6 +81,7 @@ public class VentanaAgregarProducto extends JFrame implements ActionListener {
 
             adminPanel.actualizarTabla();
             JOptionPane.showMessageDialog(this,"El Producto ha sido modificado","Mensaje", JOptionPane.INFORMATION_MESSAGE,null);
+            dispose();
         });
     }
     /**
@@ -80,7 +89,7 @@ public class VentanaAgregarProducto extends JFrame implements ActionListener {
     */
     public void inicio(){
     	List<Categoria> categorias = manejoCategorias.getCategorias();
-        actualizarCombo();
+        
         contenedor = getContentPane(); /* Obtiene el panel de contenidos de la ventana */
     	contenedor.setLayout(null); /* Establece que el contenedor no tiene un layout */
         
@@ -103,6 +112,7 @@ public class VentanaAgregarProducto extends JFrame implements ActionListener {
 	categoria.setBounds(20, 80, 135, 23); 
         campoCategoria = new JComboBox<>(categorias.toArray(new Categoria[0]));
 	campoCategoria.setBounds(160, 80, 160, 23);
+        actualizarCombo();
 	
 	// Establece la etiqueta y el combo box del tipo del Producto
 	tipo = new JLabel();
@@ -239,24 +249,11 @@ public class VentanaAgregarProducto extends JFrame implements ActionListener {
     * throws Exception Excepcion de campo nulo o error en formato de
     * numero
     */
-    private void añadirProducto() {
-	Tipo valor3;
-		
-	// Obtiene el cargo seleccionado del combobox
-	String itemSeleccionado = (String) campoTipo.getSelectedItem();
-		
-	/* De acuerdo al tipo seleccionado, se asigna el valor de atributo correspondiente */
-	switch (itemSeleccionado) {
-            case "Capsula": valor3 = Tipo.CAPSULA;
-            break;
-            case "Liquido": valor3 = Tipo.LIQUIDO;
-            break;
-            default: valor3 = Tipo.TABLETA;
-        }
-		
+    private void añadirProducto(){
 	try {
             String valor1 = campoNombre.getText();
             Categoria valor2 = (Categoria) campoCategoria.getSelectedItem();
+            Tipo valor3 = (Tipo) campoTipo.getSelectedItem();
             String valor4 = campoMedida.getText();
             String valor5 = campoDescripcion.getText();
             double valor6 = Double.parseDouble(campoPrecio.getText());
