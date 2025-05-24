@@ -94,4 +94,8 @@ public class Tabla extends JPanel {
             model.setValueAt(i + 1, i, 0);
         }
     }
+    
+        public DefaultTableModel getModel() {
+        return this.model;
+    }
 }

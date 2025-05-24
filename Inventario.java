@@ -17,7 +17,6 @@ import javax.swing.*;
    Producto y un total de la nomina de Productos.
 */
 
-@SuppressWarnings("unused")
 public class Inventario implements Serializable {
     private ArrayList<Producto> lista; // Atributo que identifica un vector de Productos
     private boolean guardado = false;

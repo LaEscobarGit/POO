@@ -9,6 +9,7 @@ public class DatosDelSistema extends JPanel {
     private final Inventario inventario;
     private final Tabla tabla;
 
+    @SuppressWarnings("unused")
     public DatosDelSistema(Font smallFont, Inventario inventario, Tabla tabla) {
         this.inventario = inventario;
         this.tabla = tabla;
@@ -56,7 +57,7 @@ public class DatosDelSistema extends JPanel {
         mainPanel.add(txtCliente, gbc);
 
         gbc.gridx = 2;
-        JButton btnBuscarCliente = new JButton("Buscar");
+        JButton btnBuscarCliente = new JButton("Agregar");
         btnBuscarCliente.setFont(smallFont);
         btnBuscarCliente.setPreferredSize(buttonSize);
         mainPanel.add(btnBuscarCliente, gbc);
@@ -76,7 +77,7 @@ public class DatosDelSistema extends JPanel {
         mainPanel.add(txtProducto, gbc);
 
         // Botón de búsqueda
-        btnBuscarProducto = new JButton("Buscar");
+        btnBuscarProducto = new JButton("Agregar");
         btnBuscarProducto.setFont(smallFont);
         btnBuscarProducto.setPreferredSize(buttonSize);
         btnBuscarProducto.addActionListener(e -> buscarProducto()); // Listener correcto
