@@ -2,13 +2,13 @@
 * Esta clase denominada Producto modela un Producto de una
 * farmacia.
 */
-package com.mycompany.mavenproject1;
+
 import java.io.Serializable;
 
 public class Producto implements Serializable {
 	private String nombre; 
 	private Categoria categoria; 
-	private Tipo tipo; 
+	private String tipo; 
 	private String medida; 
 	private String descripcion;
 	private double precio; 
@@ -30,7 +30,7 @@ public class Producto implements Serializable {
 	 * @param cantidad Cantidad comprada.
 	 * @param preescripcion Indica si requiere prescripción médica.
 	 */
-	public Producto(String nombre, Categoria categoria, Tipo tipo, String medida,
+	public Producto(String nombre, Categoria categoria, String tipo, String medida,
 	String descripcion, double precio, int id, int stock, boolean preescripcion){
 		this.nombre = nombre;
 		this.categoria = categoria; 
@@ -51,7 +51,7 @@ public class Producto implements Serializable {
 	public Categoria getCategoria(){
 		return categoria;
 	}
-	public Tipo getTipo(){
+	public String getTipo(){
 		return tipo;
 	}
 	public String getMedida(){
@@ -83,7 +83,7 @@ public class Producto implements Serializable {
 	public void setCategoria(Categoria categoria){
             this.categoria = categoria;
 	}
-	public void setTipo(Tipo tipo){
+	public void setTipo(String tipo){
             this.tipo = tipo;
 	}
 	public void setMedida(String medida){

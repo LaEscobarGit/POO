@@ -2,10 +2,20 @@ import java.awt.*;
 import javax.swing.*;
 
 public class DatosDelSistema extends JPanel {
-    public DatosDelSistema(Font smallFont) {
+    // Campos de clase (asegúrate que estén declarados aquí)
+    private final JTextField txtProducto;
+    private final JButton btnBuscarProducto;
+    private final JSpinner spinnerCantidad;
+    private final Inventario inventario;
+    private final Tabla tabla;
+
+    public DatosDelSistema(Font smallFont, Inventario inventario, Tabla tabla) {
+        this.inventario = inventario;
+        this.tabla = tabla;
+
         setLayout(new BorderLayout(5, 5));
         setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0, 0), 10));
-        
+
         // Panel principal con GridBagLayout
         JPanel mainPanel = new JPanel(new GridBagLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -16,9 +26,9 @@ public class DatosDelSistema extends JPanel {
         // Tamaños uniformes
         Dimension fieldSize = new Dimension(150, 25);
         Dimension buttonSize = new Dimension(80, 25);
-        Dimension smallFieldSize = new Dimension(60, 25); // Para el spinner
+        Dimension smallFieldSize = new Dimension(60, 25);
 
-        // Sección EMPLEADO
+        
         gbc.gridx = 0;
         gbc.gridy = 0;
         JLabel lblEmpleado = new JLabel("Empleado:");
@@ -32,7 +42,7 @@ public class DatosDelSistema extends JPanel {
         comboEmpleados.setPreferredSize(fieldSize);
         mainPanel.add(comboEmpleados, gbc);
 
-        // Sección CLIENTE
+        // --- Sección CLIENTE ---
         gbc.gridx = 0;
         gbc.gridy = 1;
         JLabel lblCliente = new JLabel("N° Cliente:");
@@ -51,26 +61,29 @@ public class DatosDelSistema extends JPanel {
         btnBuscarCliente.setPreferredSize(buttonSize);
         mainPanel.add(btnBuscarCliente, gbc);
 
-        // Sección PRODUCTO
+        // --- Sección PRODUCTO (PARTE CRÍTICA) ---
         gbc.gridx = 0;
         gbc.gridy = 2;
         JLabel lblProducto = new JLabel("ID. Producto:");
         lblProducto.setFont(smallFont);
         mainPanel.add(lblProducto, gbc);
 
-        gbc.gridx = 1;
-        JTextField txtProducto = new JTextField("1");
+        // Inicialización CORRECTA del txtProducto
+        txtProducto = new JTextField("1"); // Valor por defecto "1"
         txtProducto.setFont(smallFont);
         txtProducto.setPreferredSize(fieldSize);
+        gbc.gridx = 1;
         mainPanel.add(txtProducto, gbc);
 
-        gbc.gridx = 2;
-        JButton btnBuscarProducto = new JButton("Buscar");
+        // Botón de búsqueda
+        btnBuscarProducto = new JButton("Buscar");
         btnBuscarProducto.setFont(smallFont);
         btnBuscarProducto.setPreferredSize(buttonSize);
+        btnBuscarProducto.addActionListener(e -> buscarProducto()); // Listener correcto
+        gbc.gridx = 2;
         mainPanel.add(btnBuscarProducto, gbc);
 
-        // Sección CANTIDAD (ahora alineada con los demás)
+        // --- Sección CANTIDAD ---
         gbc.gridx = 0;
         gbc.gridy = 3;
         JLabel lblCantidad = new JLabel("Cantidad:");
@@ -78,17 +91,30 @@ public class DatosDelSistema extends JPanel {
         mainPanel.add(lblCantidad, gbc);
 
         gbc.gridx = 1;
-        JSpinner spinnerCantidad = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
+        spinnerCantidad = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
         spinnerCantidad.setPreferredSize(smallFieldSize);
-        
-        // Ajustamos el editor del spinner para que coincida con el estilo
         JSpinner.NumberEditor editor = new JSpinner.NumberEditor(spinnerCantidad, "#");
         spinnerCantidad.setEditor(editor);
         editor.getTextField().setFont(smallFont);
         editor.getTextField().setHorizontalAlignment(JTextField.CENTER);
-        
         mainPanel.add(spinnerCantidad, gbc);
 
         add(mainPanel, BorderLayout.CENTER);
+    }
+
+    private void buscarProducto() {
+        try {
+            int id = Integer.parseInt(txtProducto.getText()); // Ahora txtProducto NO es null
+            int cantidad = (int) spinnerCantidad.getValue();
+            
+            Producto producto = inventario.buscarProducto(id);
+            if (producto != null) {
+                tabla.agregarProducto(producto, cantidad);
+            } else {
+                JOptionPane.showMessageDialog(this, "Producto no encontrado", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "ID debe ser un número", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

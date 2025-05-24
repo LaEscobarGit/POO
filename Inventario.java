@@ -1,4 +1,3 @@
-package com.mycompany.mavenproject1;
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -11,7 +10,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.*;
 import java.util.ArrayList;
 import javax.swing.*;
 /*
@@ -19,6 +17,7 @@ import javax.swing.*;
    Producto y un total de la nomina de Productos.
 */
 
+@SuppressWarnings("unused")
 public class Inventario implements Serializable {
     private ArrayList<Producto> lista; // Atributo que identifica un vector de Productos
     private boolean guardado = false;

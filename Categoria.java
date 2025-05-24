@@ -1,9 +1,9 @@
-package com.mycompany.mavenproject1;
 import java.io.Serializable;
 
 public class Categoria implements Serializable{
-    private String nombre;
 
+    private String nombre;
+    
     public Categoria(String nombre){
         this.nombre = nombre;
     }
