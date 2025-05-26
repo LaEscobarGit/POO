@@ -1,3 +1,4 @@
+package com.mycompany.mavenproject1;
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.*;
 import java.util.ArrayList;
 import javax.swing.*;
 /*
@@ -18,7 +20,7 @@ import javax.swing.*;
 */
 
 public class Inventario implements Serializable {
-    private ArrayList<Producto> lista; // Atributo que identifica un vector de Productos
+    private ArrayList<Producto> lista;
     private boolean guardado = false;
     private File ruta;
     
@@ -28,7 +30,7 @@ public class Inventario implements Serializable {
         getInventario();
     }
     
-    public ArrayList<Producto> getLista(){ //obtener lista de productos
+    public ArrayList<Producto> getLista(){ 
         return lista;
     }
     public void agregarProducto(Producto a){
@@ -46,10 +48,6 @@ public class Inventario implements Serializable {
             }
         }
         return null;
-    }
-
-    public ArrayList<Producto> getProductos(){
-        return lista;
     }
 
     public void guardarInventario(Component parent){

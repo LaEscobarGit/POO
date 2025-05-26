@@ -18,13 +18,9 @@ public class VentanaAgregarProducto extends JFrame implements ActionListener {
 	
     // Campos de texto a ingresar de un Producto
     private JTextField campoNombre, campoPrecio, campoMedida, campoDescripcion, campoId;
-    private JCheckBox checkPreescripcion; // Botones de radios
+    private JCheckBox checkPreescripcion;
     private JComboBox<Categoria> campoCategoria;
     private JComboBox<Tipo> campoTipo;
-    private JSpinner campoStock;
-    private JSpinner campoCantidad; // Un selector de datos numerico
-    private SpinnerNumberModel modeloSpinner; /* Modelo numerico para el selector numerico */
-    private SpinnerNumberModel modeloSpinner2;
     
     /* Botones para agregar un Producto y para borrar la lista de
     Productos */
@@ -61,7 +57,6 @@ public class VentanaAgregarProducto extends JFrame implements ActionListener {
         campoCategoria.setSelectedItem(productoEditar.getCategoria());
         campoTipo.setSelectedItem(productoEditar.getTipo());
         campoPrecio.setText(String.valueOf(productoEditar.getPrecio()));
-        modeloSpinner.setValue(productoEditar.getStock());
         campoDescripcion.setText(productoEditar.getDescripcion());
         campoMedida.setText(productoEditar.getMedida());
         checkPreescripcion.setSelected(productoEditar.getPreescripcion());
@@ -74,7 +69,6 @@ public class VentanaAgregarProducto extends JFrame implements ActionListener {
             productoEditar.setCategoria((Categoria) campoCategoria.getSelectedItem());
             productoEditar.setTipo((Tipo) campoTipo.getSelectedItem());
             productoEditar.setPrecio(Double.parseDouble(campoPrecio.getText()));
-            productoEditar.setStock((Integer)modeloSpinner.getValue());
             productoEditar.setDescripcion(campoDescripcion.getText());
             productoEditar.setMedida(campoMedida.getText());
             productoEditar.setPreescripcion(checkPreescripcion.isSelected());
@@ -147,42 +141,17 @@ public class VentanaAgregarProducto extends JFrame implements ActionListener {
 	preescripcion.setBounds(20,230,170,30);
 	checkPreescripcion = new JCheckBox("Necesita preescripcion", false);
 	checkPreescripcion.setBounds(160,230,160,30); 
-	
-	// Establece la etiqueta y el stock del Producto
-	stock = new JLabel();
-	stock.setText("Stock:");
-	stock.setBounds(20, 260, 135, 23);
-	campoStock = new JSpinner(); // Crea un spinner
-	modeloSpinner = new SpinnerNumberModel(); /* Crea un modelo numerico para el spinner */
-	modeloSpinner.setMinimum(1);
-	modeloSpinner.setMaximum(101);
-	modeloSpinner.setValue(30);
-	campoStock.setModel(modeloSpinner); /* Asocia el modelo numerico al spinner */
-	campoStock.setBounds(160, 260, 40, 23); /* Establece la posicion del spinner */
-	
-		/* CAMBIAR Establece la etiqueta y la cantidad del Producto
-		cantidad = new JLabel();
-		cantidad.setText("Cantidad:");
-		cantidad.setBounds(20, 290, 135, 23);
-		campoCantidad = new JSpinner(); // Crea un spinner
-		modeloSpinner2 = new SpinnerNumberModel();
-		modeloSpinner2.setMinimum(1);
-		modeloSpinner2.setMaximum(5);
-		modeloSpinner2.setValue(1);
-		campoCantidad.setModel(modeloSpinner2); 
-		campoCantidad.setBounds(160, 290, 40, 23);
-		*/
 		
 	// Establece el boton agregar Producto
 	agregar = new JButton();
 	agregar.setText("Agregar");
-	agregar.setBounds(50, 320, 100, 23); 
+	agregar.setBounds(50, 260, 100, 23); 
 	agregar.addActionListener(this);
 	
 	// Establece el boton borrar Productos
 	limpiar = new JButton();
 	limpiar.setText("Borrar");
-	limpiar.setBounds(195, 320, 100, 23);
+	limpiar.setBounds(195, 260, 100, 23);
 	limpiar.addActionListener(this);
 	
 	// Se añade cada componente gráfico al contenedor de la ventana
@@ -202,10 +171,6 @@ public class VentanaAgregarProducto extends JFrame implements ActionListener {
 	contenedor.add(campoPrecio);
 	contenedor.add(preescripcion);
 	contenedor.add(checkPreescripcion);
-	contenedor.add(stock);
-	contenedor.add(campoStock);
-	/*contenedor.add(cantidad);
-	contenedor.add(campoCantidad);CAMBIAR*/
 	contenedor.add(agregar);
 	contenedor.add(limpiar);
     }
@@ -218,7 +183,6 @@ public class VentanaAgregarProducto extends JFrame implements ActionListener {
 	campoCategoria.setSelectedIndex(0);
 	campoTipo.setSelectedIndex(0);
 	campoPrecio.setText("");
-	//campoCantidad.setValue(0); CAMBIAR
 	campoMedida.setText("");
 	campoDescripcion.setText("");
 	campoId.setText("");
@@ -258,9 +222,8 @@ public class VentanaAgregarProducto extends JFrame implements ActionListener {
             String valor5 = campoDescripcion.getText();
             double valor6 = Double.parseDouble(campoPrecio.getText());
             int valor7 = Integer.parseInt(campoId.getText());
-            int valor8 = (int) campoStock.getValue();
-            boolean valor9 = true; //CAMBIAR ESTA PARTE
-            Producto nuevo = new Producto(valor1, valor2, valor3, valor4, valor5, valor6, valor7, valor8, valor9); // Se crea un Producto
+            boolean valor8 = checkPreescripcion.isSelected();
+            Producto nuevo = new Producto(valor1, valor2, valor3, valor4, valor5, valor6, valor7, valor8); // Se crea un Producto
             lista.agregarProducto(nuevo); /* Se agrega un Producto a la lista de Productos */
 	
             // Mensaje de confirmacion de Producto agregado a la lista

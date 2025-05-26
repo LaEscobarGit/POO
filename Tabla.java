@@ -1,3 +1,4 @@
+package com.mycompany.mavenproject1;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -10,8 +11,9 @@ public class Tabla extends JPanel {
     public Tabla(Font smallFont, PanelDeAbajo panelDeAbajo) {
         this.panelDeAbajo = panelDeAbajo;
         setLayout(new BorderLayout());
+        setBackground(Color.white);
         setBorder(BorderFactory.createLineBorder(new Color(2, 2, 2, 2), 10)); 
-        setPreferredSize(new Dimension(0, 250));
+        setPreferredSize(new Dimension(0, 100));
 
         String[] columnNames = {"N°", "ID. PRODUCTO", "PRODUCTO", "CANTIDAD", "PRECIO", "TOTAL"};
         model = new DefaultTableModel(columnNames, 0) {
@@ -34,6 +36,7 @@ public class Tabla extends JPanel {
         table.getColumnModel().getColumn(5).setPreferredWidth(70);
         
         JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(0,100));
         add(scrollPane, BorderLayout.CENTER);
     }
 
@@ -78,14 +81,17 @@ public class Tabla extends JPanel {
     public void eliminarFilaSeleccionada() {
         int filaSeleccionada = table.getSelectedRow();
         if (filaSeleccionada >= 0) {
-            model.removeRow(filaSeleccionada);
-            actualizarNumeracion();
-            actualizarTotal();
+            int respuesta = JOptionPane.showConfirmDialog(this,"¿Está seguro que desea eliminar el producto seleccionado?",
+                "Confirmar Eliminación",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
+            if (respuesta == JOptionPane.YES_OPTION) {
+                model.removeRow(filaSeleccionada);
+                actualizarNumeracion();
+                actualizarTotal();
+                JOptionPane.showMessageDialog(this,"Producto eliminado","Operación Exitosa",JOptionPane.INFORMATION_MESSAGE);
+            }
+            
         } else {
-            JOptionPane.showMessageDialog(this, 
-                "Seleccione un producto para eliminar", 
-                "Advertencia", 
-                JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Seleccione un producto para eliminar", "Advertencia", JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -95,7 +101,7 @@ public class Tabla extends JPanel {
         }
     }
     
-        public DefaultTableModel getModel() {
+    public DefaultTableModel getModel() {
         return this.model;
     }
 }

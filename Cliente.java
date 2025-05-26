@@ -6,12 +6,14 @@ public class Cliente implements Serializable{
     private String nombre;
     private long telefono;
     private String correo;
+    private int puntos;
 
     public Cliente(int numero, String nombre, long telefono, String correo){
         this.numero = numero;
         this.nombre = nombre;
         this.telefono = telefono;
         this.correo = correo;
+        this.puntos = 0;
     }
 
     public int getNumero(){
@@ -26,6 +28,9 @@ public class Cliente implements Serializable{
     public String getCorreo(){
         return correo;
     }
+    public int getPuntos(){
+        return puntos;
+    }
 
     public void setNumero(int numero){
         this.numero = numero;
@@ -38,5 +43,8 @@ public class Cliente implements Serializable{
     }
     public void setCorreo(String correo){
         this.correo = correo;
+    }
+    public void setPuntos(int puntos){
+        this.puntos = puntos;
     }
 }

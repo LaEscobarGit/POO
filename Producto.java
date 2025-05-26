@@ -2,21 +2,23 @@
 * Esta clase denominada Producto modela un Producto de una
 * farmacia.
 */
-
+package com.mycompany.mavenproject1;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.time.LocalDate;
 
 public class Producto implements Serializable {
 	private String nombre; 
 	private Categoria categoria; 
-	private String tipo; 
+	private Tipo tipo; 
 	private String medida; 
 	private String descripcion;
 	private double precio; 
 	private int id; 
-	private int stock; 
 	private int cantidad;
 	private boolean preescripcion;
-	
+        private List<Lote> lotes;
 	/**
 	 * Constructor de la clase Producto.
 	 * @param nombre Nombre del producto.
@@ -26,54 +28,50 @@ public class Producto implements Serializable {
 	 * @param descripcion Breve descripción del producto.
 	 * @param precio Precio unitario del producto.
 	 * @param id Identificador único del producto.
-	 * @param stock Cantidad disponible en inventario.
 	 * @param cantidad Cantidad comprada.
 	 * @param preescripcion Indica si requiere prescripción médica.
 	 */
-	public Producto(String nombre, Categoria categoria, String tipo, String medida,
-	String descripcion, double precio, int id, int stock, boolean preescripcion){
-		this.nombre = nombre;
-		this.categoria = categoria; 
-		this.tipo = tipo; 
-		this.medida = medida; 
-		this.descripcion = descripcion;
-		this.precio = precio; 
-		this.id = id; 
-		this.stock = stock; 
-		this.cantidad = 0;
-		this.preescripcion = preescripcion;
+	public Producto(String nombre, Categoria categoria, Tipo tipo, String medida,
+	String descripcion, double precio, int id, boolean preescripcion){
+            this.nombre = nombre;
+            this.categoria = categoria; 
+            this.tipo = tipo; 
+            this.medida = medida; 
+            this.descripcion = descripcion;
+            this.precio = precio; 
+            this.id = id; 
+            this.cantidad = 0;
+            this.preescripcion = preescripcion;
+            this.lotes = new ArrayList<>();
 	}
 	
 	//getters
 	public String getNombre(){
-		return nombre;
+            return nombre;
 	}
 	public Categoria getCategoria(){
-		return categoria;
+            return categoria;
 	}
-	public String getTipo(){
-		return tipo;
+	public Tipo getTipo(){
+            return tipo;
 	}
 	public String getMedida(){
-		return medida;
+            return medida;
 	}
 	public String getDescripcion(){
-		return descripcion;
+            return descripcion;
 	}
 	public double getPrecio(){
-		return precio;
+            return precio;
 	}
 	public int getId(){
-		return id;
-	}
-	public int getStock(){
-		return stock;
+            return id;
 	}
 	public int getCantidad(){
-		return cantidad;
+            return cantidad;
 	}
 	public boolean getPreescripcion(){
-		return preescripcion;
+            return preescripcion;
 	}
 
 	//setters
@@ -83,7 +81,7 @@ public class Producto implements Serializable {
 	public void setCategoria(Categoria categoria){
             this.categoria = categoria;
 	}
-	public void setTipo(String tipo){
+	public void setTipo(Tipo tipo){
             this.tipo = tipo;
 	}
 	public void setMedida(String medida){
@@ -98,9 +96,6 @@ public class Producto implements Serializable {
 	public void setId(int id){
             this.id = id;
 	}
-	public void setStock(int stock){
-            this.stock = stock;
-	}
 	public void setPreescripcion(boolean preescripcion){
             this.preescripcion = preescripcion;
 	}
@@ -112,8 +107,52 @@ public class Producto implements Serializable {
 	public double calcularPago(){
 		return (cantidad * precio);
 	}
+        
+        public void agregarLote(int cantidad, LocalDate fechaCaducidad){
+            lotes.add(new Lote(this, cantidad, fechaCaducidad));
+        }
+        
+        public void eliminarLote(int cantidad, LocalDate fechaCaducidad) {
+            lotes.remove(new Lote(this, cantidad, fechaCaducidad));
+        }
 
-	public void agregarStock(int cantidad){
-		stock = stock + cantidad;
-	}
+        public void actualizarLote(int cantidadVieja, LocalDate fechaVieja, int cantidadNueva, LocalDate fechaNueva) {
+            eliminarLote(cantidadVieja, fechaVieja);
+            agregarLote(cantidadNueva, fechaNueva);
+        }
+        public int getStockTotal(){
+            int total = 0;
+            for(Lote lote:lotes){
+                total = total + lote.getCantidad();
+            }
+            return total;
+        }
+
+        public int getStockDisponible(){
+            int total = 0;
+            for(Lote lote:lotes){
+                if(!lote.caducado()){
+                    total = total + lote.getCantidad();
+                }
+            }
+            return total;
+        }
+
+        public int getStockCaducado(){
+            int total = 0;
+            for(Lote lote:lotes){
+                if(lote.caducado()){
+                    total = total + lote.getCantidad();
+                }
+            }
+            return total;
+        }
+
+        public List<Lote> getLotes(){
+            return lotes;
+        }
+        
+        @Override public String toString(){
+            return nombre;
+        }
 }
